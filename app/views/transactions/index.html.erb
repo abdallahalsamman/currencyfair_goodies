@@ -1,2 +1,18 @@
-<h1>Transactions#index</h1>
-<p>Find me in app/views/transactions/index.html.erb</p>
+<%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
+
+<h1>Transactions placed per month</h1>
+<%= line_chart Transaction.group_by_month(:time_placed).count %>
+
+<h1>Transactions per country</h1>
+<%= geo_chart Transaction.group(:originating_country).count %>
+
+<h1>Top currencies used by senders</h1>
+<%= column_chart Transaction.group(:currency_from).order('COUNT(currency_from) DESC').limit(15).count %>
+
+<h1>Top "transfered to" currencies</h1>
+<%= column_chart Transaction.group(:currency_to).order('COUNT(currency_to) DESC').limit(20).count %>
+
+<h1>Average amount sold per month</h1>
+<%= line_chart Transaction.group_by_month(:time_placed).average(:amount_sell).transform_values(&:to_i), thousands: ',' %>
+
+
