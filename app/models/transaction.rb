@@ -1,6 +1,6 @@
 class Transaction < ApplicationRecord
-  validates :originating_country, length: { minimum: 2 }
-  validates :currency_from, :currency_to, length: { minimum: 3 }
+  validates :originating_country, length: { is: 2 }
+  validates :currency_from, :currency_to, length: { is: 3 }
   validates_numericality_of :amount_buy, :amount_sell, :rate, :greater_than => 0.0
   validate :check_different_currencies_from_to
 
