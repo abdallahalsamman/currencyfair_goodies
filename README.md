@@ -27,3 +27,6 @@ curl --header "Content-Type: application/json" \
 
 ### How to run the test suite
 Make sure you're in the project's directory then execute `rails test`
+
+### Look & Feel
+![shot-20181201-28139-fu1y8u](https://user-images.githubusercontent.com/12014839/49326042-d2f30500-f554-11e8-8b28-f86c9ba52c23.jpeg)
