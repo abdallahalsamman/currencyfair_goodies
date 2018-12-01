@@ -1,19 +1,29 @@
 <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
 
+<% transaction_by_month = Transaction.group_by_month(:time_placed) %>
 <h1>Transactions placed per month</h1>
-<%= line_chart Transaction.group_by_month(:time_placed).count %>
+<%= line_chart transaction_by_month.count %>
+
+<h1>Total amount sold per customer/month</h1>
+<%= line_chart transaction_by_month.sum(:amount_sell).transform_values(&:to_i), thousands: ',' %>
+
+<h1>Average amount sold per customer/month</h1>
+<%= line_chart transaction_by_month.average(:amount_sell).transform_values(&:to_i), thousands: ',' %>
 
 <h1>Total transactions per country</h1>
 <%= geo_chart Transaction.group(:originating_country).count %>
 
-<h1>Top currencies used by senders</h1>
-<%= column_chart Transaction.group(:currency_from).order('COUNT(currency_from) DESC').limit(15).count %>
+<% transactions_grouped_by_currency_from = Transaction.group(:currency_from) %>
+<% transactions_grouped_by_currency_to = Transaction.group(:currency_to) %>
 
-<h1>Top "transfered to" currencies</h1>
-<%= column_chart Transaction.group(:currency_to).order('COUNT(currency_to) DESC').limit(20).count %>
+<h1>Top sold currencies</h1>
+<%= column_chart transactions_grouped_by_currency_from.order('COUNT(currency_from) DESC').limit(15).count %>
 
-<h1>Total amount sold per month</h1>
-<%= line_chart Transaction.group_by_month(:time_placed).sum(:amount_sell).transform_values(&:to_i), thousands: ',' %>
+<h1>Top bought currencies</h1>
+<%= column_chart transactions_grouped_by_currency_to.order('COUNT(currency_to) DESC').limit(20).count %>
 
-<h1>Average amount sold per month</h1>
-<%= line_chart Transaction.group_by_month(:time_placed).average(:amount_sell).transform_values(&:to_i), thousands: ',' %>
+<h1>Least sold currencies</h1>
+<%= column_chart transactions_grouped_by_currency_from.order('COUNT(currency_from) ASC').limit(15).count %>
+
+<h1>Least bought currencies</h1>
+<%= column_chart transactions_grouped_by_currency_to.order('COUNT(currency_to) ASC').limit(20).count %>
